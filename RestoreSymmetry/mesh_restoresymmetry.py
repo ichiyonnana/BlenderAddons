@@ -342,21 +342,21 @@ def restore_symmetry(mesh, shapekey, axis, source, targetmix):
         e.tag = False
 
     bm.to_mesh(mesh)
-    mesh.update() 
+    mesh.update()
 
 
 def menufunc(self, context):
-    self.layout.operator(RestoreSymmetry.bl_idname)
+    self.layout.operator(Restore_OT_Symmetry.bl_idname)
 
 
 def register():
-    bpy.utils.register_class(RestoreSymmetry)
+    bpy.utils.register_class(Restore_OT_Symmetry)
     bpy.types.VIEW3D_MT_mirror.append(menufunc)
 
 
 def unregister():
     bpy.types.VIEW3D_MT_mirror.remove(menufunc)
-    bpy.utils.unregister_class(RestoreSymmetry)
+    bpy.utils.unregister_class(Restore_OT_Symmetry)
 
 
 if __name__ == "__main__":
