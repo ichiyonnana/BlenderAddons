@@ -28,9 +28,9 @@
 
 bl_info = {
     "name": "Restore Symmetry (originally Remirror)",
-    "author": "Philip Lafleur (original author), Henrik Berglund (edits), Sergey Meshkov (edits)",
-    "version": (1, 0, 3),
-    "blender": (2, 7, 9),
+    "author": "Philip Lafleur (original author), Henrik Berglund (edits), Sergey Meshkov (edits), 12funkeys (edits)",
+    "version": (1, 0, 4),
+    "blender": (2, 83, 0),
     "location": "View3D > Object > Mirror > Restore Symmetry",
     "description": "Non-destructively update symmetry of a mirrored mesh (and shapekeys)",
     "warning": "",
@@ -51,7 +51,7 @@ ERR_FACE_COUNT   = "Encountered edge with more than 2 faces attached."
 CENTRAL_LOOP_MARGIN = 1e-5
 
 
-class RestoreSymmetry(bpy.types.Operator):
+class Restore_OT_Symmetry(bpy.types.Operator):
     bl_idname      = "mesh.restoresymmetry"
     bl_label       = "Restore Symmetry"
     bl_description = "Non-destructively update symmetry of a mirrored mesh (and shapekeys)"
@@ -207,7 +207,7 @@ def visit_mirror_verts(v_start, e_start, visitor, shapelayer, shapekey):
 def update_verts(v_start, e_start, axis, source, shapelayer, shapekey, targetmix):
     def update_positive(v_right, v_left):
         if(shapekey=="Basis" or shapekey == None): #no shapekeys or basis shapekey selected - use original code
-        # mix source and target (default mix amount 0 means use 100% source); mix at target, then update source 
+        # mix source and target (default mix amount 0 means use 100% source); mix at target, then update source
             v_left.co = targetmix*v_left.co + (1.0-targetmix)*v_right.co
             v_left.co[axis] = v_left.co[axis] - 2.0*(1.0-targetmix)*v_right.co[axis]
             v_right.co = v_left.co
@@ -221,13 +221,13 @@ def update_verts(v_start, e_start, axis, source, shapelayer, shapekey, targetmix
 
     def update_negative(v_right, v_left):
         if(shapekey=="Basis" or shapekey == None): #no shapekeys or basis shapekey selected - use original code
-        # mix source and target (default mix amount 0 means use 100% source); mix at target, then update source 
+        # mix source and target (default mix amount 0 means use 100% source); mix at target, then update source
             v_right.co = targetmix*v_right.co + (1.0-targetmix)*v_left.co
-            v_right.co[axis] = v_right.co[axis] - 2.0*(1.0-targetmix)*v_left.co[axis]            
+            v_right.co[axis] = v_right.co[axis] - 2.0*(1.0-targetmix)*v_left.co[axis]
             v_left.co = v_right.co
             v_left.co[axis] = -v_right.co[axis]
         else: #shapekeys found - use edited code
-        # mix source and target (default mix amount 0 means use 100% source); mix at target, then update source 
+        # mix source and target (default mix amount 0 means use 100% source); mix at target, then update source
             v_right[shapelayer] = targetmix*v_right[shapelayer] + (1.0-targetmix)*v_left[shapelayer]
             v_right[shapelayer][axis] = v_right[shapelayer][axis] - 2.0*(1.0-targetmix)*v_left[shapelayer][axis]
             v_left[shapelayer] = v_right[shapelayer]
@@ -342,7 +342,7 @@ def restore_symmetry(mesh, shapekey, axis, source, targetmix):
         e.tag = False
 
     bm.to_mesh(mesh)
-    mesh.update(calc_tessface = True)
+    mesh.update() 
 
 
 def menufunc(self, context):
